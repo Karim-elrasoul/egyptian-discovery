@@ -7,7 +7,8 @@ import { SignOutButton } from "@/components/sign-out-button";
 
 export const instant = false;
 
-export default async function AccountPage() {
+export default async function AccountPage({ searchParams }: { searchParams: Promise<{ auth_error?: string; next?: string }> }) {
+  const params = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -30,6 +31,7 @@ export default async function AccountPage() {
       <SiteHeader />
       <div className="page-shell section-shell">
         <section className="page-hero"><p className="eyebrow">Your travel desk</p><h1>{user ? "Your journeys and next steps." : "Welcome to Egyptian Discovery."}</h1></section>
+        {params.auth_error === "invalid_or_expired_link" && <div className="panel"><p className="muted" role="alert">The sign-in or password-reset link is invalid or has expired. Request a new link below.</p></div>}
         {!user ? (
           <div className="account-grid"><AuthPanel /><div className="panel"><h3>Secure account</h3><p className="muted">Sign in or create an account to reserve seats, submit payment proof, track orders, and manage traveler details.</p></div></div>
         ) : (

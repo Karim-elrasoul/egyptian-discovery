@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { SiteHeader } from "@/components/site-header";
 import { getDestinations, getTrips, unsplashUrl } from "@/lib/supabase/data";
 
@@ -58,7 +57,7 @@ export default async function Home() {
                   <span className="favorite">♡</span><span className="availability">{trip.status === "gathering" ? "Now gathering" : trip.status}</span>
                 </Link>
                 <div className="trip-content">
-                  <div className="trip-meta"><span>{trip.duration_days} days</span><strong>★ 4.9</strong></div>
+                  <div className="trip-meta"><span>{trip.duration_days} days</span><strong>{trip.max_capacity} seats</strong></div>
                   <h3>{trip.name_en}</h3>
                   <p>{trip.preferred_dates?.length ? `${trip.preferred_dates.length} preferred departures` : "Flexible departure"} · {trip.deposit_percent}% deposit</p>
                   <div className="trip-price"><span>From</span><strong>{Number(trip.price_per_person).toLocaleString("en-EG")} EGP</strong><Link href={`/trips/${trip.slug}`}>View trip</Link></div>
@@ -90,15 +89,6 @@ export default async function Home() {
         <div className="review-card"><p className="muted">Verified traveler reviews will appear here after customers submit and staff approve them.</p><Link href="/contact" className="view-link">Share feedback <span>→</span></Link></div>
       </section>
 
-      <footer className="footer">
-        <div className="footer-inner section-shell">
-          <div className="footer-brand"><Image src="/egyptian-discovery-logo.png" alt="Egyptian Discovery" width={70} height={70} /><p>Unforgettable journeys across Egypt.</p></div>
-          <div><h3>Discover</h3><Link href="/destinations">Destinations</Link><Link href="/trips">Journeys</Link><Link href="/stories">Travel stories</Link></div>
-          <div><h3>Company</h3><Link href="/about">About us</Link><Link href="/contact">Contact</Link><Link href="/shop">Shop</Link></div>
-          <div className="newsletter"><h3>Travel inspiration</h3><p>Monthly stories and first access to new journeys.</p><form><input type="email" aria-label="Email address" placeholder="Email address" /><button aria-label="Subscribe">→</button></form></div>
-        </div>
-        <div className="footer-bottom section-shell"><span>© 2026 Egyptian Discovery</span><div><Link href="#">Privacy</Link><Link href="#">Terms</Link><Link href="#">Instagram</Link></div></div>
-      </footer>
     </main>
   );
 }

@@ -1,15 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export function AuthPanel() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next");
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [forgotEmail, setForgotEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   async function forgotPassword() {
     setBusy(true);
@@ -41,6 +45,16 @@ export function AuthPanel() {
       setBusy(false);
       return;
     }
+    if (mode === "signup" && password !== confirmPassword) {
+      setMessage("Passwords do not match.");
+      setBusy(false);
+      return;
+    }
+    if (!/^(?:\+20|0)?1[0-2,5]\d{8}$/.test(phone) && mode === "signup") {
+      setMessage("Enter a valid Egyptian phone number.");
+      setBusy(false);
+      return;
+    }
     const supabase = createSupabaseBrowserClient();
 
     const result = mode === "signin"
@@ -59,8 +73,9 @@ export function AuthPanel() {
     } else if (mode === "signup") {
       setMessage("Account created. Check your email if confirmation is required.");
     } else {
-      router.refresh();
       setMessage("Signed in securely.");
+      router.push(next && next.startsWith("/") ? next : "/account");
+      router.refresh();
     }
     setBusy(false);
   }
@@ -74,9 +89,10 @@ export function AuthPanel() {
       <button className="forgot-password" type="button" onClick={forgotPassword} disabled={busy}>Forgot password?</button>
       <label className="forgot-email"><span>Email for reset</span><input type="email" value={forgotEmail} onChange={(event) => setForgotEmail(event.target.value)} placeholder="you@example.com" /></label>
       <form className="search-form" onSubmit={submit}>
-        {mode === "signup" && <><label><span>Full name</span><input name="name" required autoComplete="name" /></label><label><span>Phone</span><input name="phone" type="tel" required autoComplete="tel" /></label></>}
+        {mode === "signup" && <><label><span>Full name</span><input name="name" required autoComplete="name" /></label><label><span>Phone</span><input name="phone" type="tel" required autoComplete="tel" placeholder="+20..." /></label></>}
         <label><span>Email</span><input name="email" type="email" required autoComplete="email" /></label>
-        <label><span>Password</span><input name="password" type="password" required minLength={8} autoComplete={mode === "signin" ? "current-password" : "new-password"} /></label>
+        <label><span>Password</span><div className="password-field"><input name="password" type={showPassword ? "text" : "password"} required minLength={8} autoComplete={mode === "signin" ? "current-password" : "new-password"} /><button type="button" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "Hide" : "Show"}</button></div></label>
+        {mode === "signup" && <label><span>Confirm password</span><input type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required minLength={8} autoComplete="new-password" /></label>}
         <button className="button button-dark" disabled={busy} type="submit">{busy ? "Please wait…" : mode === "signin" ? "Continue securely" : "Create account"} <span>→</span></button>
       </form>
       {message && <p className="muted" role="status">{message}</p>}

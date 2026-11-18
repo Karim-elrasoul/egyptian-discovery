@@ -26,6 +26,25 @@ export async function POST(request: Request) {
 
   const { data: trip } = await supabase.from("trips").select("id,preferred_dates").eq("slug", tripSlug).in("status", ["gathering", "confirmed"]).single();
   if (!trip) return NextResponse.json({ error: "This journey is not available for reservation." }, { status: 400 });
+  const { data: takenReservations } = await supabase
+    .from("reservations")
+    .select("seats,status,customer_id,held_until")
+    .eq("trip_id", trip.id);
+  const occupied = (takenReservations ?? []).reduce((sum, reservation) => {
+    if (["deposit_paid", "confirmed", "fully_paid"].includes(reservation.status)) return sum + reservation.seats;
+    if (["held", "awaiting_payment", "payment_review"].includes(reservation.status) && new Date(reservation.held_until).getTime() > Date.now()) return sum + reservation.seats;
+    return sum;
+  }, 0);
+  const { data: tripCapacity } = await supabase.from("trips").select("max_capacity").eq("id", trip.id).single();
+  if (tripCapacity && occupied + seats > tripCapacity.max_capacity) {
+    return NextResponse.json({ error: "Not enough seats available." }, { status: 400 });
+  }
+  const activeUserSeats = (takenReservations ?? []).reduce((sum, reservation) => {
+    if (reservation.customer_id !== user.id) return sum;
+    if (["held", "awaiting_payment", "payment_review"].includes(reservation.status) && new Date(reservation.held_until).getTime() > Date.now()) return sum + reservation.seats;
+    return sum;
+  }, 0);
+  if (activeUserSeats >= 10) return NextResponse.json({ error: "You already have the maximum number of active holds." }, { status: 400 });
   const invalidDates = preferredDates.filter((date) => !trip.preferred_dates.includes(date));
   if (invalidDates.length) return NextResponse.json({ error: "Choose a date offered for this trip." }, { status: 400 });
   const { data, error } = await supabase.rpc("create_reservation", {

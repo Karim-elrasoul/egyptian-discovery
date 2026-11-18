@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 type Locale = "en" | "ar";
 
@@ -14,6 +16,10 @@ export function SiteHeader() {
     return saved === "ar" ? "ar" : "en";
   });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [signedIn, setSignedIn] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const router = useRouter();
   const nav = locale === "ar"
     ? ["الوجهات", "الرحلات", "الحكايات", "المتجر"]
     : ["Destinations", "Journeys", "Stories", "Shop"];
@@ -25,6 +31,29 @@ export function SiteHeader() {
     document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
     window.localStorage.setItem("egyptian-discovery-language", locale);
   }, [locale]);
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) {
+        setSignedIn(false);
+        setUserName("");
+        return;
+      }
+      setSignedIn(true);
+      const { data: profile } = await supabase.from("profiles").select("display_name,email").eq("id", data.user.id).single();
+      setUserName(profile?.display_name || profile?.email || data.user.email || "My account");
+    });
+  }, []);
+
+  async function signOut() {
+    await createSupabaseBrowserClient().auth.signOut();
+    setSignedIn(false);
+    setUserName("");
+    setProfileOpen(false);
+    router.push("/");
+    router.refresh();
+  }
 
   function toggleLanguage() {
     setLocale((current) => current === "en" ? "ar" : "en");
@@ -51,7 +80,7 @@ export function SiteHeader() {
         <button className="language-toggle" onClick={toggleLanguage} aria-label="Change language">
           {locale === "en" ? "العربية" : "English"}
         </button>
-        <Link href="/account" className="account-link">Account</Link>
+        {signedIn ? <div className="profile-menu"><button className="account-link" type="button" onClick={() => setProfileOpen(!profileOpen)}>{userName}</button>{profileOpen && <div className="profile-dropdown"><Link href="/account" onClick={() => setProfileOpen(false)}>My bookings & orders</Link><Link href="/account" onClick={() => setProfileOpen(false)}>Profile</Link><button type="button" onClick={signOut}>Sign out</button></div>}</div> : <Link href={`/account?next=${encodeURIComponent(pathname)}`} className="account-link">Sign in</Link>}
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation">
           {menuOpen ? "Close" : "Menu"}
         </button>

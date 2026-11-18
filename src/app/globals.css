@@ -167,7 +167,22 @@ button,a,input,select { outline-offset:3px; }
 .forgot-password { background:none; border:0; color:var(--brand-dark); cursor:pointer; font-size:12px; margin:4px 0 14px; padding:0; text-align:left; }
 .forgot-email { display:flex; flex-direction:column; font-size:11px; font-weight:800; gap:6px; margin-bottom:12px; text-transform:uppercase; }
 .forgot-email input { border:1px solid var(--line); border-radius:10px; padding:10px; text-transform:none; }
+.profile-menu { position:relative; }
+.profile-dropdown { background:var(--white); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); color:var(--ink); display:flex; flex-direction:column; min-width:220px; padding:8px; position:absolute; right:0; top:48px; z-index:30; }
+.profile-dropdown a,.profile-dropdown button { background:none; border:0; border-radius:8px; cursor:pointer; font-size:13px; padding:10px 12px; text-align:left; }
+.profile-dropdown a:hover,.profile-dropdown button:hover { background:var(--cream); }
+.admin-nav { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0; }
+.admin-nav a { background:#3b3530; border:1px solid #5a524c; border-radius:999px; font-size:12px; padding:9px 12px; }
+.password-field { align-items:center; display:flex; }
+.password-field input { flex:1; }
+.password-field button { background:none; border:0; color:var(--brand-dark); cursor:pointer; font-size:12px; }
 .trip-facts { display:grid; gap:10px; grid-template-columns:1fr 1fr; margin:22px 0; }
+.admin-form-grid { display:grid; gap:12px; grid-template-columns:1fr 1fr; }
+.admin-trip-form { margin-top:24px; }
+.admin-trip-form label { display:flex; flex-direction:column; }
+.admin-trip-form label span { font-size:11px; font-weight:800; margin-bottom:6px; text-transform:uppercase; }
+.admin-trip-form input,.admin-trip-form select { border:1px solid #5a524c; border-radius:9px; color:var(--ink); padding:10px; }
+@media (max-width:760px) { .admin-form-grid { grid-template-columns:1fr; } }
 .search-form textarea { border:1px solid var(--line); border-radius:10px; min-height:100px; padding:12px; resize:vertical; }
 .auth-reset-form { max-width:520px; }
 .auth-reset-form label { display:flex; flex-direction:column; margin-bottom:14px; }

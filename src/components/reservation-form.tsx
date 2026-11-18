@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function ReservationForm({ tripSlug, tripId, preferredDates, status }: { tripSlug: string; tripId: string; preferredDates: string[]; status: string }) {
+  const router = useRouter();
   const [seats, setSeats] = useState(1);
   const [selectedDate, setSelectedDate] = useState(preferredDates[0] ?? "");
   const [message, setMessage] = useState("");
@@ -18,6 +20,10 @@ export function ReservationForm({ tripSlug, tripId, preferredDates, status }: { 
         body: JSON.stringify({ tripSlug, seats, preferredDates: selectedDate ? [selectedDate] : [] }),
       });
       const result = await response.json();
+      if (response.status === 401) {
+        router.push(`/account?next=${encodeURIComponent(`/trips/${tripSlug}`)}`);
+        return;
+      }
       setMessage(response.ok ? "Your 12-hour seat hold is ready. Continue to payment review from your account." : result.error);
     } catch {
       setMessage("We could not start the hold. Please try again.");

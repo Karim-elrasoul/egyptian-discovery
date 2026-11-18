@@ -1,6 +1,7 @@
 import { SiteHeader } from "@/components/site-header";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { AdminPaymentReview } from "@/components/admin-payment-review";
+import Link from "next/link";
 
 export const instant = false;
 
@@ -51,6 +52,7 @@ export default async function AdminPage() {
         </section>
         {isAdmin && (
           <>
+            <nav className="admin-nav"><Link href="/admin">Overview</Link><Link href="/admin/trips">Trips</Link><Link href="/admin/destinations">Destinations</Link><Link href="/admin/products">Products</Link><Link href="/admin/settings">Settings</Link></nav>
             <div className="admin-kpis">
               <div className="kpi"><p className="eyebrow">Reservations</p><strong>{reservations.length}</strong></div>
               <div className="kpi"><p className="eyebrow">Payment proofs</p><strong>{payments.filter((payment) => payment.status === "under_review" || payment.status === "pending").length}</strong></div>
