@@ -4,19 +4,31 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { copy, type Locale } from "@/lib/content";
+
+type Locale = "en" | "ar";
 
 export function SiteHeader() {
-  const [locale, setLocale] = useState<Locale>("en");
+  const [locale, setLocale] = useState<Locale>(() => {
+    if (typeof window === "undefined") return "en";
+    const saved = window.localStorage.getItem("egyptian-discovery-language");
+    return saved === "ar" ? "ar" : "en";
+  });
   const [menuOpen, setMenuOpen] = useState(false);
-  const text = copy[locale];
+  const nav = locale === "ar"
+    ? ["الوجهات", "الرحلات", "الحكايات", "المتجر"]
+    : ["Destinations", "Journeys", "Stories", "Shop"];
   const pathname = usePathname();
   const isHome = pathname === "/";
 
   useEffect(() => {
     document.documentElement.lang = locale;
     document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+    window.localStorage.setItem("egyptian-discovery-language", locale);
   }, [locale]);
+
+  function toggleLanguage() {
+    setLocale((current) => current === "en" ? "ar" : "en");
+  }
 
   return (
     <header className={isHome ? "site-header" : "site-header site-header-solid"}>
@@ -25,7 +37,7 @@ export function SiteHeader() {
         <span><strong>Egyptian</strong><small>Discovery</small></span>
       </Link>
       <nav className={menuOpen ? "main-nav is-open" : "main-nav"} aria-label="Main navigation">
-        {text.nav.map((item, index) => (
+        {nav.map((item, index) => (
           <Link
             href={["/destinations", "/trips", "/stories", "/shop"][index]}
             key={item}
@@ -36,7 +48,7 @@ export function SiteHeader() {
         ))}
       </nav>
       <div className="header-actions">
-        <button className="language-toggle" onClick={() => setLocale(locale === "en" ? "ar" : "en")} aria-label="Change language">
+        <button className="language-toggle" onClick={toggleLanguage} aria-label="Change language">
           {locale === "en" ? "العربية" : "English"}
         </button>
         <Link href="/account" className="account-link">Account</Link>

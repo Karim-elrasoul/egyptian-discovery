@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     .eq("id", reservationId)
     .eq("customer_id", user.id)
     .single();
-  if (reservationError || !reservation || !["held", "payment_review"].includes(reservation.status)) {
+  if (reservationError || !reservation || !["held", "awaiting_payment", "payment_review", "deposit_paid", "confirmed"].includes(reservation.status)) {
     return NextResponse.json({ error: "This reservation is not available for payment review." }, { status: 400 });
   }
 

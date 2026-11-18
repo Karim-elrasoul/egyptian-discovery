@@ -1,5 +1,7 @@
 # Egyptian Discovery
 
+> **Database note:** The live Supabase project contains the production Egyptian Discovery schema. Do not apply the removed starter migration; it did not match the deployed database and could not provision live booking safely.
+
 An editorial travel-booking foundation for Egyptian Discovery, built with Next.js App Router and designed for Supabase-backed reservations, payment-proof review, and shop operations.
 
 ## Run locally

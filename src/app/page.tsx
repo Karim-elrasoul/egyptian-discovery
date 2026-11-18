@@ -23,14 +23,6 @@ export default async function Home() {
             <input name="destination" placeholder="Destination or landmark" />
           </label>
           <label className="search-field">
-            <span>Check in</span>
-            <input name="checkin" type="date" />
-          </label>
-          <label className="search-field">
-            <span>Check out</span>
-            <input name="checkout" type="date" />
-          </label>
-          <label className="search-field">
             <span>Travelers</span>
             <select name="guests" defaultValue="2"><option value="1">1 traveler</option><option value="2">2 travelers</option><option value="3">3 travelers</option><option value="4">4 travelers</option><option value="5">5+ travelers</option></select>
           </label>

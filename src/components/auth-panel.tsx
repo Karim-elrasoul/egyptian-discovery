@@ -9,17 +9,18 @@ export function AuthPanel() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [forgotEmail, setForgotEmail] = useState("");
 
   async function forgotPassword() {
     setBusy(true);
     setMessage("");
-    const email = window.prompt("Enter your administrator email:");
-    if (!email) {
+    if (!forgotEmail.trim()) {
+      setMessage("Enter your email address.");
       setBusy(false);
       return;
     }
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail.trim(), {
       redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
     });
     setMessage(error ? error.message : "If the email is registered, a password-reset link has been sent.");
@@ -33,6 +34,13 @@ export function AuthPanel() {
     const form = new FormData(event.currentTarget);
     const email = String(form.get("email"));
     const password = String(form.get("password"));
+    const phone = String(form.get("phone") || "").trim();
+    const name = String(form.get("name") || "").trim();
+    if (mode === "signup" && (!phone || !name)) {
+      setMessage("Full name and phone number are required.");
+      setBusy(false);
+      return;
+    }
     const supabase = createSupabaseBrowserClient();
 
     const result = mode === "signin"
@@ -41,8 +49,8 @@ export function AuthPanel() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/account`,
-            data: { display_name: String(form.get("name") || "") },
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
+            data: { display_name: name, phone },
           },
         });
 
@@ -64,8 +72,9 @@ export function AuthPanel() {
         <button type="button" className={mode === "signup" ? "active" : ""} onClick={() => setMode("signup")}>Create account</button>
       </div>
       <button className="forgot-password" type="button" onClick={forgotPassword} disabled={busy}>Forgot password?</button>
+      <label className="forgot-email"><span>Email for reset</span><input type="email" value={forgotEmail} onChange={(event) => setForgotEmail(event.target.value)} placeholder="you@example.com" /></label>
       <form className="search-form" onSubmit={submit}>
-        {mode === "signup" && <label><span>Full name</span><input name="name" required autoComplete="name" /></label>}
+        {mode === "signup" && <><label><span>Full name</span><input name="name" required autoComplete="name" /></label><label><span>Phone</span><input name="phone" type="tel" required autoComplete="tel" /></label></>}
         <label><span>Email</span><input name="email" type="email" required autoComplete="email" /></label>
         <label><span>Password</span><input name="password" type="password" required minLength={8} autoComplete={mode === "signin" ? "current-password" : "new-password"} /></label>
         <button className="button button-dark" disabled={busy} type="submit">{busy ? "Please wait…" : mode === "signin" ? "Continue securely" : "Create account"} <span>→</span></button>

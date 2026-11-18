@@ -13,7 +13,7 @@ export async function getDestinations() {
 
 export async function getTrips() {
   const supabase = await createSupabaseServerClient();
-  const { data } = await supabase.from("trips").select("id,slug,name_en,name_ar,trip_type,duration_days,price_per_person,currency,deposit_percent,min_travelers,max_capacity,status,preferred_dates,hero_image,images,description_en,description_ar").eq("status", "gathering").order("created_at");
+  const { data } = await supabase.from("trips").select("id,slug,name_en,name_ar,trip_type,duration_days,price_per_person,currency,deposit_percent,min_travelers,max_capacity,status,preferred_dates,booking_deadline,hero_image,images,description_en,description_ar").in("status", ["gathering", "under_review", "confirmed", "fully_booked"]).order("created_at");
   return data ?? [];
 }
 
