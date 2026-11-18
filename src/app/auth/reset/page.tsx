@@ -32,7 +32,7 @@ export default function ResetPasswordPage() {
 
   return (
     <main className="page-shell section-shell">
-      <section className="page-hero"><p className="eyebrow">Administrator security</p><h1>Choose a new password.</h1></section>
+      <section className="page-hero"><p className="eyebrow">Account security</p><h1>Choose a new password.</h1></section>
       <form className="panel auth-reset-form" onSubmit={reset}>
         <label><span>New password</span><input name="password" type="password" minLength={8} required /></label>
         <label><span>Confirm password</span><input name="confirm" type="password" minLength={8} required /></label>

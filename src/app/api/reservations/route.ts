@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   const seats = payload?.seats;
   const preferredDates = payload?.preferredDates;
   if (!tripSlug || typeof seats !== "number" || !Number.isInteger(seats) || seats < 1 || seats > 10) {
-    return NextResponse.json({ error: "Choose between 1 and 12 seats." }, { status: 400 });
+    return NextResponse.json({ error: "Choose between 1 and 10 seats." }, { status: 400 });
   }
   if (!preferredDates?.length) return NextResponse.json({ error: "Choose one or more dates offered for this trip." }, { status: 400 });
 
