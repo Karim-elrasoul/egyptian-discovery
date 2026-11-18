@@ -80,7 +80,7 @@ export function SiteHeader() {
         <button className="language-toggle" onClick={toggleLanguage} aria-label="Change language">
           {locale === "en" ? "العربية" : "English"}
         </button>
-        {signedIn ? <div className="profile-menu"><button className="account-link" type="button" onClick={() => setProfileOpen(!profileOpen)}>{userName}</button>{profileOpen && <div className="profile-dropdown"><Link href="/account" onClick={() => setProfileOpen(false)}>My bookings & orders</Link><Link href="/account" onClick={() => setProfileOpen(false)}>Profile</Link><button type="button" onClick={signOut}>Sign out</button></div>}</div> : <Link href={`/account?next=${encodeURIComponent(pathname)}`} className="account-link">Sign in</Link>}
+        {signedIn ? <div className="profile-menu"><button className="account-link" type="button" onClick={() => setProfileOpen(!profileOpen)}>{userName}</button>{profileOpen && <div className="profile-dropdown"><Link href="/account" onClick={() => setProfileOpen(false)}>My bookings & orders</Link><Link href="/account/profile" onClick={() => setProfileOpen(false)}>Profile</Link><button type="button" onClick={signOut}>Sign out</button></div>}</div> : <Link href={`/account?next=${encodeURIComponent(pathname)}`} className="account-link">Sign in</Link>}
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation">
           {menuOpen ? "Close" : "Menu"}
         </button>
