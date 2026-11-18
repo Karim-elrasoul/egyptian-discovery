@@ -12,6 +12,7 @@ export function AuthPanel() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotOpen, setForgotOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -86,8 +87,8 @@ export function AuthPanel() {
         <button type="button" className={mode === "signin" ? "active" : ""} onClick={() => setMode("signin")}>Sign in</button>
         <button type="button" className={mode === "signup" ? "active" : ""} onClick={() => setMode("signup")}>Create account</button>
       </div>
-      <button className="forgot-password" type="button" onClick={forgotPassword} disabled={busy}>Forgot password?</button>
-      <label className="forgot-email"><span>Email for reset</span><input type="email" value={forgotEmail} onChange={(event) => setForgotEmail(event.target.value)} placeholder="you@example.com" /></label>
+      <button className="forgot-password" type="button" onClick={() => setForgotOpen(!forgotOpen)} disabled={busy}>Forgot password?</button>
+      {forgotOpen && <><label className="forgot-email"><span>Email for reset</span><input type="email" value={forgotEmail} onChange={(event) => setForgotEmail(event.target.value)} placeholder="you@example.com" /></label><button className="button button-dark" type="button" onClick={forgotPassword} disabled={busy}>Send reset email</button></>}
       <form className="search-form" onSubmit={submit}>
         {mode === "signup" && <><label><span>Full name</span><input name="name" required autoComplete="name" /></label><label><span>Phone</span><input name="phone" type="tel" required autoComplete="tel" placeholder="+20..." /></label></>}
         <label><span>Email</span><input name="email" type="email" required autoComplete="email" /></label>

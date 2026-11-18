@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
-import { getDestinations, getTrips, unsplashUrl } from "@/lib/supabase/data";
+import { getDestinations, getTrips, getProducts, unsplashUrl } from "@/lib/supabase/data";
+import { FavoriteButton } from "@/components/favorite-button";
 
 export const instant = false;
 
 export default async function Home() {
-  const [destinations, trips] = await Promise.all([getDestinations(), getTrips()]);
+  const [destinations, trips, products] = await Promise.all([getDestinations(), getTrips(), getProducts()]);
   return (
     <main>
       <SiteHeader />
@@ -27,6 +28,11 @@ export default async function Home() {
           </label>
           <button className="search-button" type="submit" aria-label="Search trips">Search</button>
         </form>
+      </section>
+
+      <section className="home-section section-shell">
+        <div className="section-heading"><div><p className="section-kicker">Made for the journey</p><h2>From the Egyptian Discovery shop</h2></div><Link href="/shop" className="view-link">Visit the shop <span>→</span></Link></div>
+        <div className="trip-grid">{products.slice(0,3).map((product) => <article className="trip-card" key={product.id}><Link href="/shop" className="trip-photo" style={{ backgroundImage:`url(${unsplashUrl(product.images?.[0]||null,900)})` }} /><div className="trip-content"><h3>{product.name_en}</h3><p>{product.description_en}</p><div className="trip-price"><strong>{Number(product.price).toLocaleString("en-EG")} EGP</strong><Link href="/shop">View product</Link></div></div></article>)}</div>
       </section>
 
       <section className="home-section section-shell">
@@ -53,9 +59,11 @@ export default async function Home() {
           <div className="trip-grid">
             {trips.map((trip) => (
               <article className="trip-card" key={trip.id}>
-                <Link href={`/trips/${trip.slug}`} className="trip-photo" style={{ backgroundImage: `url(${unsplashUrl(trip.hero_image)})` }}>
-                  <span className="favorite">♡</span><span className="availability">{trip.status === "gathering" ? "Now gathering" : trip.status}</span>
-                </Link>
+                <div className="trip-photo" style={{ backgroundImage: `url(${unsplashUrl(trip.hero_image)})` }}>
+                  <Link href={`/trips/${trip.slug}`} className="trip-photo-link" aria-label={`View ${trip.name_en}`} />
+                  <span className="availability">{trip.status === "gathering" ? "Now gathering" : trip.status}</span>
+                  <FavoriteButton tripId={trip.id} />
+                </div>
                 <div className="trip-content">
                   <div className="trip-meta"><span>{trip.duration_days} days</span><strong>{trip.max_capacity} seats</strong></div>
                   <h3>{trip.name_en}</h3>

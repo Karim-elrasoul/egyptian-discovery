@@ -1,6 +1,8 @@
 import { SiteHeader } from "@/components/site-header";
 import { AdminTripManager } from "@/components/admin-trip-manager";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { AdminNav } from "@/components/admin-nav";
+import { AdminDeleteButton } from "@/components/admin-delete-button";
 
 export const instant = false;
 
@@ -22,5 +24,5 @@ export default async function AdminTripsPage() {
       destinations = destinationResult.data ?? [];
     }
   }
-  return <main className="admin-shell"><SiteHeader /><div className="page-shell section-shell"><section className="page-hero"><p className="eyebrow light">Trip operations</p><h1>{isAdmin ? "Manage journeys" : "Authorized staff only"}</h1></section>{isAdmin && <><table className="admin-table"><thead><tr><th>Trip</th><th>Status</th><th>Capacity</th><th>Preferred dates</th></tr></thead><tbody>{trips.map((trip) => <tr key={trip.id}><td>{trip.name_en}</td><td>{trip.status.replaceAll("_", " ")}</td><td>{trip.max_capacity}</td><td>{trip.preferred_dates?.join(", ")}</td></tr>)}</tbody></table><AdminTripManager destinations={destinations} /></>}</div></main>;
+  return <main className="admin-shell"><SiteHeader /><div className="page-shell section-shell"><AdminNav /><section className="page-hero"><p className="eyebrow light">Trip operations</p><h1>{isAdmin ? "Manage journeys" : "Authorized staff only"}</h1></section>{isAdmin && <><table className="admin-table"><thead><tr><th>Trip</th><th>Status</th><th>Capacity</th><th>Preferred dates</th><th>Action</th></tr></thead><tbody>{trips.map((trip) => <tr key={trip.id}><td>{trip.name_en}</td><td>{trip.status.replaceAll("_", " ")}</td><td>{trip.max_capacity}</td><td>{trip.preferred_dates?.join(", ")}</td><td><AdminDeleteButton kind="trips" id={trip.id} name={trip.name_en} /></td></tr>)}</tbody></table><AdminTripManager destinations={destinations} /></>}</div></main>;
 }

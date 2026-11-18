@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SiteFooter } from "@/components/site-footer";
+import { WhatsappButton } from "@/components/whatsapp-button";
 
 export const metadata: Metadata = {
   title: { default: "Egyptian Discovery", template: "%s · Egyptian Discovery" },
@@ -9,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}<SiteFooter /></body></html>;
+  return <html lang="en"><body>{children}<WhatsappButton /><SiteFooter /></body></html>;
 }

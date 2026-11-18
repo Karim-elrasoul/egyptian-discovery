@@ -1,6 +1,7 @@
 import { SiteHeader } from "@/components/site-header";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { AdminSettingsManager } from "@/components/admin-settings-manager";
+import { AdminNav } from "@/components/admin-nav";
 
 export const instant = false;
 
@@ -17,5 +18,5 @@ export default async function AdminSettingsPage() {
       settings = data ?? [];
     }
   }
-  return <main className="admin-shell"><SiteHeader /><div className="page-shell section-shell"><section className="page-hero"><p className="eyebrow light">Main admin settings</p><h1>{isAdmin ? "Business settings" : "Main admin access required"}</h1></section>{isAdmin && <AdminSettingsManager settings={settings} />}</div></main>;
+  return <main className="admin-shell"><SiteHeader /><div className="page-shell section-shell"><AdminNav /><section className="page-hero"><p className="eyebrow light">Main admin settings</p><h1>{isAdmin ? "Business settings" : "Main admin access required"}</h1></section>{isAdmin && <AdminSettingsManager settings={settings} />}</div></main>;
 }

@@ -19,6 +19,7 @@ export function SiteHeader() {
   const [userName, setUserName] = useState("");
   const [signedIn, setSignedIn] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
   const nav = locale === "ar"
     ? ["الوجهات", "الرحلات", "الحكايات", "المتجر"]
@@ -41,8 +42,9 @@ export function SiteHeader() {
         return;
       }
       setSignedIn(true);
-      const { data: profile } = await supabase.from("profiles").select("display_name,email").eq("id", data.user.id).single();
+      const { data: profile } = await supabase.from("profiles").select("display_name,email,role").eq("id", data.user.id).single();
       setUserName(profile?.display_name || profile?.email || data.user.email || "My account");
+      setIsAdmin(!!profile && ["admin","main_admin"].includes(profile.role));
     });
   }, []);
 
@@ -50,6 +52,7 @@ export function SiteHeader() {
     await createSupabaseBrowserClient().auth.signOut();
     setSignedIn(false);
     setUserName("");
+    setIsAdmin(false);
     setProfileOpen(false);
     router.push("/");
     router.refresh();
@@ -80,7 +83,7 @@ export function SiteHeader() {
         <button className="language-toggle" onClick={toggleLanguage} aria-label="Change language">
           {locale === "en" ? "العربية" : "English"}
         </button>
-        {signedIn ? <div className="profile-menu"><button className="account-link" type="button" onClick={() => setProfileOpen(!profileOpen)}>{userName}</button>{profileOpen && <div className="profile-dropdown"><Link href="/account" onClick={() => setProfileOpen(false)}>My bookings & orders</Link><Link href="/account/profile" onClick={() => setProfileOpen(false)}>Profile</Link><button type="button" onClick={signOut}>Sign out</button></div>}</div> : <Link href={`/account?next=${encodeURIComponent(pathname)}`} className="account-link">Sign in</Link>}
+        {signedIn ? <div className="profile-menu"><button className="account-link" type="button" onClick={() => setProfileOpen(!profileOpen)}>{userName}</button>{profileOpen && <div className="profile-dropdown"><Link href="/account" onClick={() => setProfileOpen(false)}>My bookings & orders</Link><Link href="/account/profile" onClick={() => setProfileOpen(false)}>Profile</Link>{isAdmin && <Link href="/admin" onClick={() => setProfileOpen(false)}>Admin dashboard</Link>}<button type="button" onClick={signOut}>Sign out</button></div>}</div> : <Link href={`/account?next=${encodeURIComponent(pathname)}`} className="account-link">Sign in</Link>}
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation">
           {menuOpen ? "Close" : "Menu"}
         </button>
