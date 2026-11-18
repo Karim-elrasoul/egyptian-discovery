@@ -9,11 +9,11 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The current UI runs in clearly labeled demo mode. It does not create real reservations or process payments.
+Open [http://localhost:3000](http://localhost:3000). Production mode uses the existing Supabase project and live server-side booking functions.
 
 ## Environment
 
-Copy `.env.example` to `.env.local`. Keep `SUPABASE_SERVICE_ROLE_KEY` server-only and never expose it in browser code. Set `NEXT_PUBLIC_APP_MODE=production` only after Supabase Auth, migrations, private storage, and server actions are configured.
+Copy `.env.example` to `.env.local`. Keep `SUPABASE_SERVICE_ROLE_KEY` server-only and never expose it in browser code. Set `NEXT_PUBLIC_APP_MODE=production` after configuring Supabase Auth and private storage.
 
 ## Supabase setup
 
@@ -23,7 +23,7 @@ Copy `.env.example` to `.env.local`. Keep `SUPABASE_SERVICE_ROLE_KEY` server-onl
 4. Configure Auth providers and create the first administrator manually in Supabase, then set that profile's `role` to `admin`.
 5. Add the public URL and keys to `.env.local`.
 
-The migration keeps payment proofs and traveler data private, exposes only published content publicly, and records the role and audit boundaries needed for the live flows. Reservation holds, payment review, and admin actions should be implemented as server-side transactions before enabling production mode.
+The database keeps payment proofs and traveler data private, exposes only published content publicly, and records role and audit boundaries. Reservation holds, payment review, and admin actions use server-side Supabase RPC functions.
 
 ## Deployment
 
@@ -31,4 +31,4 @@ Deploy to Vercel or another Next.js-compatible host. Configure all variables fro
 
 ## Remaining production work
 
-The visual foundation, Supabase server client, transactional seat-hold RPC, reservation API boundary, private payment-proof upload endpoint, staff payment-review endpoint, and supporting reservation/shop schema are ready for integration testing. A customer-facing payment form, checkout mutations, and broader admin CRUD screens still need to be connected before production booking is enabled.
+The live Supabase client, destination/trip/shop reads, account state, transactional seat-hold RPC, reservation API, private payment-proof upload, order checkout, and role-protected admin review are implemented. Final live end-to-end tests require real user credentials.

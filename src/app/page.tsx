@@ -89,19 +89,13 @@ export default async function Home() {
 
       <section className="promo-section section-shell">
         <div className="promo-card">
-          <div className="promo-content"><p className="section-kicker light">Seasonal escape</p><h2>Meet the Nile at golden hour.</h2><p>Save 15% on selected departures through the end of November.</p><Link href="/trips" className="promo-button">Explore the offer <span>→</span></Link></div>
+          <div className="promo-content"><p className="section-kicker light">A journey worth considering</p><h2>Meet Egypt at golden hour.</h2><p>Compare current departures, preferred dates, deposits, and group requirements in one place.</p><Link href="/trips" className="promo-button">Explore journeys <span>→</span></Link></div>
         </div>
       </section>
 
       <section className="home-section section-shell reviews-section">
-        <div className="section-heading"><div><p className="section-kicker">Traveler stories</p><h2>Loved by people who wander</h2></div><div className="review-score"><strong>4.9</strong><span>★ ★ ★ ★ ★<small>From 380+ verified reviews</small></span></div></div>
-        <div className="review-grid">
-          {[
-            ["Mariam Hassan", "Cairo", "Every detail felt considered. We saw a different side of Egypt and never felt rushed."],
-            ["Daniel Reed", "London", "Beautiful hotels, warm local guides, and the perfect amount of free time."],
-            ["Nour El-Sayed", "Dubai", "The Nile journey was calm, personal, and genuinely memorable."]
-          ].map(([name, place, quote]) => <article className="review-card" key={name}><div className="review-stars">★★★★★</div><blockquote>“{quote}”</blockquote><div className="reviewer"><span>{name.slice(0,1)}</span><div><strong>{name}</strong><small>{place}</small></div></div></article>)}
-        </div>
+        <div className="section-heading"><div><p className="section-kicker">Traveler stories</p><h2>Review from the road</h2></div></div>
+        <div className="review-card"><p className="muted">Verified traveler reviews will appear here after customers submit and staff approve them.</p><Link href="/contact" className="view-link">Share feedback <span>→</span></Link></div>
       </section>
 
       <footer className="footer">
