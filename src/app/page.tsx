@@ -31,11 +31,6 @@ export default async function Home() {
       </section>
 
       <section className="home-section section-shell">
-        <div className="section-heading"><div><p className="section-kicker">Made for the journey</p><h2>From the Egyptian Discovery shop</h2></div><Link href="/shop" className="view-link">Visit the shop <span>→</span></Link></div>
-        <div className="trip-grid">{products.slice(0,3).map((product) => <article className="trip-card" key={product.id}><Link href="/shop" className="trip-photo" style={{ backgroundImage:`url(${unsplashUrl(product.images?.[0]||null,900)})` }} /><div className="trip-content"><h3>{product.name_en}</h3><p>{product.description_en}</p><div className="trip-price"><strong>{Number(product.price).toLocaleString("en-EG")} EGP</strong><Link href="/shop">View product</Link></div></div></article>)}</div>
-      </section>
-
-      <section className="home-section section-shell">
         <div className="section-heading">
           <div><p className="section-kicker">Made for the curious</p><h2>Explore iconic destinations</h2></div>
           <Link href="/destinations" className="view-link">View all destinations <span>→</span></Link>
@@ -95,6 +90,11 @@ export default async function Home() {
       <section className="home-section section-shell reviews-section">
         <div className="section-heading"><div><p className="section-kicker">Traveler stories</p><h2>Review from the road</h2></div></div>
         <div className="review-card"><p className="muted">Verified traveler reviews will appear here after customers submit and staff approve them.</p><Link href="/contact" className="view-link">Share feedback <span>→</span></Link></div>
+      </section>
+
+      <section className="home-section section-shell">
+        <div className="section-heading"><div><p className="section-kicker">Made for the journey</p><h2>From the Egyptian Discovery shop</h2></div><Link href="/shop" className="view-link">Visit the shop <span>→</span></Link></div>
+        <div className="trip-grid">{products.slice(0,3).map((product) => <article className="trip-card" key={product.id}><Link href={`/shop/${product.slug}`} className="trip-photo" style={{ backgroundImage:`url(${unsplashUrl(product.images?.[0]||null,900)})` }} /><div className="trip-content"><h3>{product.name_en}</h3><p>{product.description_en}</p><div className="trip-price"><strong>{Number(product.price).toLocaleString("en-EG")} EGP</strong><Link href={`/shop/${product.slug}`}>View product</Link></div></div></article>)}</div>
       </section>
 
     </main>

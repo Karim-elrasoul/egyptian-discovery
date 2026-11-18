@@ -7,7 +7,7 @@ import { SignOutButton } from "@/components/sign-out-button";
 
 export const instant = false;
 
-export default async function AccountPage({ searchParams }: { searchParams: Promise<{ auth_error?: string; next?: string }> }) {
+export default async function AccountPage({ searchParams }: { searchParams: Promise<{ auth_error?: string; next?: string; reservation?: string; payment?: string }> }) {
   const params = await searchParams;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -48,7 +48,11 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
               ))}
             </div>
             <div>
-              {reservations[0] && ["held", "awaiting_payment", "payment_review", "deposit_paid", "confirmed"].includes(reservations[0].status) && <PaymentProofForm reservationId={reservations[0].id} amountDue={reservations[0].status === "confirmed" ? reservations[0].amount_due : reservations[0].deposit_due} />}
+              {(() => {
+                const selected = params.reservation ? reservations.find((reservation) => reservation.id === params.reservation) : reservations[0];
+                if (!selected || !["held", "awaiting_payment", "payment_review", "deposit_paid", "confirmed"].includes(selected.status)) return null;
+                return <>{params.payment === "1" && <div className="panel" style={{marginBottom:16}}><p className="eyebrow">Next step</p><h3>Upload the deposit proof</h3><p className="muted">Submitting proof moves this booking to payment review. It does not confirm the payment.</p></div>}<PaymentProofForm reservationId={selected.id} amountDue={selected.status === "confirmed" ? selected.amount_due : selected.deposit_due} /></>;
+              })()}
               {orders[0] && <div style={{ marginTop: 20 }}><OrderProofForm orderId={orders[0].id} /></div>}
               <div className="panel account-payments">
                 <p className="eyebrow">Payment activity</p>

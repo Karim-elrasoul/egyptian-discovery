@@ -11,6 +11,10 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
   const supabase = await createSupabaseServerClient();
   const { data: trip } = await supabase.from("trips").select("*").eq("slug", slug).maybeSingle();
   if (!trip) notFound();
+  const { data: reservations } = await supabase.from("reservations").select("seats,status").eq("trip_id", trip.id);
+  const bookedSeats=(reservations??[]).reduce((sum,reservation)=>["deposit_paid","confirmed","fully_paid"].includes(reservation.status)?sum+reservation.seats:sum,0);
+  const progress=Math.min(100,Math.round((bookedSeats/trip.min_travelers)*100));
+  const {data:products}=await supabase.from("products").select("id,slug,name_en,price,currency,images").eq("status","published").eq("availability",true).limit(3);
 
   const itinerary = Array.isArray(trip.itinerary_en) ? trip.itinerary_en : [];
   const included = Array.isArray(trip.included_en) ? trip.included_en : [];
@@ -42,6 +46,8 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
                 <div><p className="eyebrow">Capacity</p><p className="muted">{trip.max_capacity} seats</p></div>
                 <div><p className="eyebrow">Booking deadline</p><p className="muted">{trip.booking_deadline ? new Date(trip.booking_deadline).toLocaleString() : "No deadline set"}</p></div>
               </div>
+              <div className="trip-progress"><div><p className="eyebrow">Trip progress</p><strong>{bookedSeats} of {trip.min_travelers} minimum seats booked</strong></div><div className="progress-track"><span style={{width:`${progress}%`}} /></div><p className="muted">{Math.max(0,trip.max_capacity-bookedSeats)} seats remaining</p></div>
+              {products&&products.length>0&&<div className="trip-gadgets"><p className="eyebrow">Useful for this trip</p><div className="trip-grid">{products.map((product)=><a className="panel" href={`/shop/${product.slug}`} key={product.id}><h3>{product.name_en}</h3><p className="muted">{Number(product.price).toLocaleString("en-EG")} {product.currency}</p></a>)}</div></div>}
               {trip.accommodation_en && <><p className="eyebrow">Accommodation</p><p className="muted">{trip.accommodation_en}</p></>}
               {trip.transport_en && <><p className="eyebrow">Transport</p><p className="muted">{trip.transport_en}</p></>}
               {included.length > 0 && <><p className="eyebrow">Included</p><ul>{included.map((item: string) => <li key={item}>{item}</li>)}</ul></>}

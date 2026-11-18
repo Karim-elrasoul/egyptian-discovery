@@ -1,5 +1,0 @@
-import { SiteHeader } from "@/components/site-header";
-
-export default function StoriesPage() {
-  return <main><SiteHeader /><div className="page-shell section-shell"><section className="page-hero"><p className="eyebrow">From the journal</p><h1>Stories for the spaces between places.</h1></section><div className="simple-grid"><article className="panel"><p className="eyebrow">Field notes · 06 min</p><h3>How to listen to the Nile</h3><p className="muted">A slower way to understand the river, from the first tea to the final light.</p></article><article className="panel"><p className="eyebrow">People · 04 min</p><h3>The table is part of the itinerary</h3><p className="muted">Meet the cooks, hosts, and storytellers who make a journey feel personal.</p></article><article className="panel"><p className="eyebrow">Guide · 08 min</p><h3>A gentle guide to packing light</h3><p className="muted">What to bring when the best souvenirs are memories and sand between your toes.</p></article></div></div></main>;
-}

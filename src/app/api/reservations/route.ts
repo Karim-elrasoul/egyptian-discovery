@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Choose between 1 and 10 seats." }, { status: 400 });
   }
   if (!preferredDates?.length) return NextResponse.json({ error: "Choose one or more dates offered for this trip." }, { status: 400 });
+  if (preferredDates.length > 4) return NextResponse.json({ error: "Choose no more than 4 preferred dates." }, { status: 400 });
 
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();

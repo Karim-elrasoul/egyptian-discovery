@@ -22,8 +22,8 @@ export function SiteHeader() {
   const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
   const nav = locale === "ar"
-    ? ["الوجهات", "الرحلات", "الحكايات", "المتجر"]
-    : ["Destinations", "Journeys", "Stories", "Shop"];
+    ? ["الوجهات", "الرحلات", "المتجر"]
+    : ["Destinations", "Journeys", "Shop"];
   const pathname = usePathname();
   const isHome = pathname === "/";
 
@@ -71,7 +71,7 @@ export function SiteHeader() {
       <nav className={menuOpen ? "main-nav is-open" : "main-nav"} aria-label="Main navigation">
         {nav.map((item, index) => (
           <Link
-            href={["/destinations", "/trips", "/stories", "/shop"][index]}
+            href={["/destinations", "/trips", "/shop"][index]}
             key={item}
             onClick={() => setMenuOpen(false)}
           >
