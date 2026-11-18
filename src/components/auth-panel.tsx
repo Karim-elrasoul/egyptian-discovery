@@ -10,6 +10,22 @@ export function AuthPanel() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
+  async function forgotPassword() {
+    setBusy(true);
+    setMessage("");
+    const email = window.prompt("Enter your administrator email:");
+    if (!email) {
+      setBusy(false);
+      return;
+    }
+    const supabase = createSupabaseBrowserClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+    });
+    setMessage(error ? error.message : "If the email is registered, a password-reset link has been sent.");
+    setBusy(false);
+  }
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -47,6 +63,7 @@ export function AuthPanel() {
         <button type="button" className={mode === "signin" ? "active" : ""} onClick={() => setMode("signin")}>Sign in</button>
         <button type="button" className={mode === "signup" ? "active" : ""} onClick={() => setMode("signup")}>Create account</button>
       </div>
+      <button className="forgot-password" type="button" onClick={forgotPassword} disabled={busy}>Forgot password?</button>
       <form className="search-form" onSubmit={submit}>
         {mode === "signup" && <label><span>Full name</span><input name="name" required autoComplete="name" /></label>}
         <label><span>Email</span><input name="email" type="email" required autoComplete="email" /></label>

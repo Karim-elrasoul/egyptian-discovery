@@ -164,6 +164,11 @@ button,a,input,select { outline-offset:3px; }
 .auth-tabs { display:flex; gap:6px; margin-bottom:18px; }
 .auth-tabs button { background:var(--cream); border:1px solid var(--line); border-radius:999px; cursor:pointer; padding:9px 12px; }
 .auth-tabs button.active { background:var(--ink); color:var(--white); }
+.forgot-password { background:none; border:0; color:var(--brand-dark); cursor:pointer; font-size:12px; margin:4px 0 14px; padding:0; text-align:left; }
+.auth-reset-form { max-width:520px; }
+.auth-reset-form label { display:flex; flex-direction:column; margin-bottom:14px; }
+.auth-reset-form label span { font-size:11px; font-weight:800; margin-bottom:6px; text-transform:uppercase; }
+.auth-reset-form input { border:1px solid var(--line); border-radius:10px; padding:12px; }
 .itinerary-row { border-top:1px solid var(--line); display:flex; gap:18px; padding:18px 0; }
 .itinerary-row>strong { align-items:center; background:var(--sand); border-radius:50%; color:var(--brand-dark); display:flex; flex:none; height:42px; justify-content:center; width:42px; }
 .itinerary-row h3 { font-family:Georgia,"Times New Roman",serif; font-size:18px; margin:0 0 5px; }
